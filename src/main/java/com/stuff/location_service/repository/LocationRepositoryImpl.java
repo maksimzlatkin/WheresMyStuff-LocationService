@@ -8,10 +8,12 @@ import com.mongodb.client.*;
 import com.stuff.location_service.mapper.HouseholdMapper;
 import com.stuff.location_service.model.Household;
 import com.stuff.location_service.model.User;
+import com.stuff.location_service.shared.ConfigProperty;
 import org.bson.BsonDocument;
 import org.bson.BsonInt64;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import javax.print.Doc;
@@ -22,7 +24,9 @@ import java.util.UUID;
 
 @Repository
 public class LocationRepositoryImpl implements HouseholdRepository {
-    ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017");
+    @Value("${wms.mongoconnectionstring:}")
+    private String someString;
+    ConnectionString connectionString = new ConnectionString(someString);
     ServerApi serverApi = ServerApi.builder().version(ServerApiVersion.V1).build();
     MongoClientSettings settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
@@ -32,6 +36,7 @@ public class LocationRepositoryImpl implements HouseholdRepository {
     MongoDatabase database = mongoClient.getDatabase("wheresmystuff");
     MongoCollection collection = database.getCollection("locations");
     public List<Household> FindAllHouseholds(){
+        System.out.println(new ConfigProperty().getProperty());
         ArrayList<Household> list = new ArrayList<Household>();
         FindIterable<Document> iterable = collection.find();
         for (Document document : iterable) {
