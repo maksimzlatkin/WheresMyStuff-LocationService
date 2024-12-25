@@ -13,6 +13,7 @@ import org.stuff.exception.EntityNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,42 +23,51 @@ public class HouseholdService {
     private final HouseholdRepository householdRepository;
     HouseholdMapper mapper = new HouseholdMapper();
 
-    public void CreateHousehold(HouseholdCreateRequest householdCreateRequest){
-        householdRepository.CreateHousehold(mapper.toHousehold(householdCreateRequest, UUID.randomUUID().toString()));
+    public void createHousehold(HouseholdCreateRequest householdCreateRequest){
+        householdRepository.save(mapper.toHousehold(householdCreateRequest, UUID.randomUUID().toString()));
     }
 
-    public void AddUserToHousehold(String id, UserDto userDTO){
-        GetHouseholdOrThrowException(id);
-        householdRepository.AddUserToHousehold(id, mapper.MapToUser(userDTO));
+    public void addUserToHousehold(String id, UserDto userDTO){
+        Household household = getHouseholdOrThrowException(id);
+        List<User> existingMembers = household.getMembers();
+        if (existingMembers == null) {
+            household.setMembers(new ArrayList<User>());
+            existingMembers = household.getMembers();
+        }
+        existingMembers.add(mapper.toUser(userDTO));
+        household.setMembers(existingMembers);
+        householdRepository.save(household);
     }
 
-    public List<HouseholdDto> GetHouseholds(){
+    public List<HouseholdDto> getHouseholds(){
         List<HouseholdDto> households = new ArrayList<HouseholdDto>();
-        for (Household household : householdRepository.FindAllHouseholds()) {
+        for (Household household : householdRepository.findAll()) {
             households.add(mapper.toHouseholdDto(household));
         }
         return households;
     }
 
-    public HouseholdDto GetHousehold(String id){
-        Household household = GetHouseholdOrThrowException(id);
+    public HouseholdDto getHousehold(String id){
+        Household household = getHouseholdOrThrowException(id);
         return mapper.toHouseholdDto(household);
     }
 
-    public List<UserDto> GetMembers(String id){
-        List<UserDto> users = new ArrayList<UserDto>();
-        if (householdRepository.FindAllUsers(id) == null) throw new EntityNotFoundException();
-        for (User user : householdRepository.FindAllUsers(id)) {
-            users.add(mapper.MapToUserDto(user));
+    public List<UserDto> getMembers(String id){
+        ArrayList<UserDto> users = new ArrayList<UserDto>();
+        Household household = getHouseholdOrThrowException(id);
+        if (household.getMembers() != null) {
+            for (User user : household.getMembers()) {
+                users.add(mapper.toUserDto(user));
+            }
         }
         return users;
     }
 
-    private Household GetHouseholdOrThrowException(String id){
-        Household household = householdRepository.FindHousehold(id);
-        if (household == null) {
-            throw new EntityNotFoundException(String.format("Customer with id='%s' not found", id));
+    private Household getHouseholdOrThrowException(String id){
+        Optional<Household> household = householdRepository.findById(id);
+        if (household.isEmpty()) {
+            throw new EntityNotFoundException(String.format("Household with id='%s' not found", id));
         }
-        return household;
+        return household.get();
     }
 }

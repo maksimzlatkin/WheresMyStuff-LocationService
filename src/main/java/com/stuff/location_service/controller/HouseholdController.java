@@ -20,25 +20,25 @@ public class HouseholdController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void CreateHousehold(@RequestBody HouseholdCreateRequest householdCreateRequest){
-        householdService.CreateHousehold(householdCreateRequest);
+        householdService.createHousehold(householdCreateRequest);
     }
 
     @PostMapping({"/{id}/members"})
     @ResponseStatus(HttpStatus.CREATED)
     public void AddUserToHousehold(@PathVariable String id, @RequestBody UserDto userDTO){
-        householdService.AddUserToHousehold(id, userDTO);
+        householdService.addUserToHousehold(id, userDTO);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<HouseholdDto> GetHouseholds(){
-        return householdService.GetHouseholds();
+        return householdService.getHouseholds();
     }
 
     @GetMapping({"/{id}"})
     @ResponseStatus(HttpStatus.OK)
     public HouseholdDto GetHousehold(@PathVariable String id){
-        HouseholdDto householdDto = householdService.GetHousehold(id);
+        HouseholdDto householdDto = householdService.getHousehold(id);
 //        if (householdDto == null) throw new HouseholdNotFoundException();
         return householdDto;
     }
@@ -46,6 +46,6 @@ public class HouseholdController {
     @GetMapping({"/{id}/members"})
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto> GetMembers(@PathVariable String id){
-        return householdService.GetMembers(id);
+        return householdService.getMembers(id);
     }
 }

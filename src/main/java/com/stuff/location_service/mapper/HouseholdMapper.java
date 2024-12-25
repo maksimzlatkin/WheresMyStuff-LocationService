@@ -13,6 +13,7 @@ public class HouseholdMapper {
                 .id(household.getId())
                 .owner(household.getOwner())
                 .sqft(household.getSqft())
+                .members(household.getMembers())
                 .build();
     }
 
@@ -47,11 +48,11 @@ public class HouseholdMapper {
                 .owner(document.getString("owner")).build();
     }
 
-    public User MapToUser(UserDto userDTO){
+    public User toUser(UserDto userDTO){
         return new User(userDTO.getEmail(), userDTO.getName());
     }
 
-    public UserDto MapToUserDto(User user){
+    public UserDto toUserDto(User user){
         return new UserDto(user.getEmail(), user.getName());
     }
 }

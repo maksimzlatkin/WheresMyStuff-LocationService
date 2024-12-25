@@ -1,20 +1,19 @@
 package com.stuff.location_service.model;
 
 import lombok.*;
-
-import java.util.ArrayList;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
-//import org.springframework.data.annotation.Id;
-//import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
-//@Document(value =  "Household")
+@Document(value =  "households")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+//@Data
 public class Household {
+    @Id
     private String id;
     private String owner;
     private int sqft;
