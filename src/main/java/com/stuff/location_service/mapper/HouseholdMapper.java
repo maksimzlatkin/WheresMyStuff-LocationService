@@ -21,31 +21,17 @@ public class HouseholdMapper {
         return Household.builder()
                 .id(householdDTO.getId())
                 .owner(householdDTO.getOwner())
-                .sqft(householdDTO.getSqft()).build();
+                .sqft(householdDTO.getSqft())
+                .members(householdDTO.getMembers())
+                .build();
     }
 
     public Household toHousehold(HouseholdCreateRequest householdCreateRequest, String houseHoldId){
         return Household.builder()
                 .id(houseHoldId)
                 .owner(householdCreateRequest.getOwner())
-                .sqft(householdCreateRequest.getSqft()).build();
-    }
-
-    public Document toDocument(Household household){
-        Document document = new Document();
-        document.append("id", household.getId());
-        document.append("owner", household.getOwner());
-        document.append("sqft", household.getSqft());
-        document.append("members", household.getMembers());
-        return document;
-    }
-
-    public Household toHousehold(Document document) {
-        return Household.builder()
-                .id(document.getString("id"))
-                .sqft(document.getInteger("sqft"))
-                .members(document.getList("members", User.class))
-                .owner(document.getString("owner")).build();
+                .sqft(householdCreateRequest.getSqft())
+                .build();
     }
 
     public User toUser(UserDto userDTO){
