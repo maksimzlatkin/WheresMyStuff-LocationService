@@ -70,4 +70,11 @@ public class HouseholdService {
         }
         return household.get();
     }
+
+    public void updateHouseholdField(String id, HouseholdCreateRequest householdCreateRequest){
+        Household household = getHouseholdOrThrowException(id);
+        household.setSqft(householdCreateRequest.getSqft());
+        household.setOwner(householdCreateRequest.getOwner());
+        householdRepository.save(household);
+    }
 }
