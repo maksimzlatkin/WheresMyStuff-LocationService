@@ -48,4 +48,10 @@ public class HouseholdController {
     public List<UserDto> GetMembers(@PathVariable String id){
         return householdService.getMembers(id);
     }
+
+    @GetMapping({"/{id}"})
+    @ResponseStatus(HttpStatus.OK)
+    public void UpdateHousehold(@PathVariable String id, @RequestBody HouseholdCreateRequest householdCreateRequest) {
+        householdService.updateHouseholdField(id, householdCreateRequest);
+    }
 }
