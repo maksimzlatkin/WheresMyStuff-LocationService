@@ -30,7 +30,7 @@ jobs:
     - name: Build with Maven
       env:
         GITHUB_TOKEN: ${{ secrets.LIBRARY_TOKEN }}
-      run: mvn --batch-mode package
+      run: mvn compile
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
