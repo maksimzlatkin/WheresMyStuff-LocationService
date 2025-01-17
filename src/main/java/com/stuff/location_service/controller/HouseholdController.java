@@ -49,7 +49,7 @@ public class HouseholdController {
         return householdService.getMembers(id);
     }
 
-    @GetMapping({"/{id}"})
+    @PutMapping({"/{id}"})
     @ResponseStatus(HttpStatus.OK)
     public void UpdateHousehold(@PathVariable String id, @RequestBody HouseholdCreateRequest householdCreateRequest) {
         householdService.updateHouseholdField(id, householdCreateRequest);
